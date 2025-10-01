@@ -1,0 +1,52 @@
+/* ResumeUpload.css */
+.resume-upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  min-height: 50vh;
+}
+
+.upload-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--primary-text);
+}
+
+.upload-subtitle {
+  font-size: 16px;
+  color: var(--secondary-text);
+  margin-bottom: 32px;
+  max-width: 450px;
+}
+
+.dragger-container .ant-upload-drag {
+  background: var(--content-bg);
+  border: 2px dashed var(--border-color);
+  border-radius: 12px;
+  padding: 40px 20px;
+  transition: border-color 0.3s ease;
+}
+
+.dragger-container .ant-upload-drag:hover {
+  border-color: var(--accent-color);
+}
+
+.ant-upload-drag-icon .anticon {
+  font-size: 48px;
+  color: var(--accent-color);
+}
+
+.ant-upload-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--primary-text);
+}
+
+.ant-upload-hint {
+  font-size: 14px;
+  color: var(--secondary-text);
+}
