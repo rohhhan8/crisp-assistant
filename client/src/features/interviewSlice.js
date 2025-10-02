@@ -44,6 +44,7 @@ const initialState = {
   answers: [], // Will now hold objects { text: string, analysis: object | null }
   currentQuestionIndex: 0,
   timer: 0,
+  error: null, // Add error field
   finalScore: null,
   finalSummary: null,
 };
@@ -94,21 +95,27 @@ export const interviewSlice = createSlice({
     builder
       .addCase(fetchQuestion.pending, (state) => {
         state.isGeneratingQuestion = true;
+        state.error = null;
       })
       .addCase(fetchQuestion.fulfilled, (state, action) => {
         state.isGeneratingQuestion = false;
         const { question, time } = action.payload;
         state.interviewQuestions.push(question);
-        state.messages.push({ text: question.questionText, sender: 'bot' });
+        let questionText = question.questionText;
+        if (question.questionType === 'conceptual') {
+          questionText += "\n\n*(Please answer this question using your microphone.)*";
+        }
+        state.messages.push({ text: questionText, sender: 'bot' });
         state.timer = time;
       })
       .addCase(fetchQuestion.rejected, (state, action) => {
         state.isGeneratingQuestion = false;
-        state.messages.push({ text: `Sorry, an error occurred: ${action.payload}. Please try again later.`, sender: 'bot' });
-        state.status = 'completed';
+        state.error = action.payload; // Set the error
+        state.messages.push({ text: `Sorry, an error occurred: ${action.payload}. Please refresh to try again.`, sender: 'bot' });
       })
       .addCase(evaluateInterview.pending, (state) => {
         state.status = 'evaluating';
+        state.error = null;
       })
       .addCase(evaluateInterview.fulfilled, (state, action) => {
         const { score, summary } = action.payload;
@@ -119,8 +126,9 @@ export const interviewSlice = createSlice({
         state.messages.push({ text: summary, sender: 'bot' });
       })
       .addCase(evaluateInterview.rejected, (state, action) => {
+        state.error = action.payload; // Set the error
         state.messages.push({ text: `Sorry, an error occurred during evaluation: ${action.payload}.`, sender: 'bot' });
-        state.status = 'completed';
+        state.status = 'in_progress'; // Revert status
       });
   },
 });

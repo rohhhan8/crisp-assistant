@@ -16,9 +16,9 @@ export const uploadResume = async (file) => {
   return response.data;
 };
 
-export const generateQuestion = async (difficulty) => {
-  // The backend expects an object with a 'difficulty' key
-  const response = await apiClient.post('/generate-question', { difficulty });
+export const generateQuestion = async (difficulty, time) => {
+  // The backend expects an object with a 'difficulty' and 'time_limit' key
+  const response = await apiClient.post('/generate-question', { difficulty, time_limit: time });
   // We return response.data directly, which is the { questionText, questionType } object
   return response.data;
 };

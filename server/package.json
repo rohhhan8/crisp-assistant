@@ -6,6 +6,8 @@
     "start": "nodemon index.js"
   },
   "dependencies": {
+    "@google/genai": "^0.14.1",
+    "@google/generative-ai": "^0.24.1",
     "assemblyai": "^4.16.1",
     "axios": "^1.4.0",
     "cors": "^2.8.5",

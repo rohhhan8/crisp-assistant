@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Layout, Tabs, Modal, Button } from 'antd';
+import { Layout, Tabs, Modal, Button, message } from 'antd';
 import IntervieweePage from './pages/IntervieweePage';
 import InterviewerPage from './pages/InterviewerPage';
 import RoleSelectionPage from './pages/RoleSelectionPage';
@@ -14,12 +14,15 @@ const App = () => {
   const [activeView, setActiveView] = useState('welcome');
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  // Get interview status from Redux state
-  const interviewStatus = useSelector((state) => state.interview.status);
+  // Get interview status and error from Redux state
+  const { status, error } = useSelector((state) => state.interview);
 
-  // Check for in-progress interview when the app loads
+  // Check for in-progress interview or errors when the app loads
   useEffect(() => {
-    if (interviewStatus === 'in_progress') {
+    if (error) {
+      message.error('An error occurred in your previous session. Starting a new interview.');
+      dispatch(resetInterview());
+    } else if (status === 'in_progress') {
       setIsModalVisible(true);
     }
   }, []); // Run only once on mount
