@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Upload, message } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
-import axios from 'axios';
+import { uploadResume } from '../services/aiService'; // Correctly import the service
 import './ResumeUpload.css';
 
 const { Dragger } = Upload;
@@ -20,29 +20,27 @@ const ResumeUpload = ({ onUploadSuccess }) => {
     uploadTriggered.current = true; // Lock trigger
 
     setLoading(true);
-    const formData = new FormData();
-    formData.append('resume', file);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/upload-resume', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      // Use the centralized API service instead of a hardcoded URL
+      const responseData = await uploadResume(file);
 
-      if (response.data.success) {
+      if (responseData) { // Assuming the service returns data on success
         message.success(`${file.name} uploaded and parsed successfully.`);
-        onUploadSuccess(response.data.data);
+        onUploadSuccess(responseData.data);
         onSuccess();
       } else {
-        message.error(response.data.message || `${file.name} upload failed.`);
-        onError(new Error(response.data.message));
+        message.error(`Failed to get a valid response for ${file.name}.`);
+        onError(new Error('Upload failed: No response data'));
       }
     } catch (error) {
-      message.error('An error occurred during the upload.');
+      const errorMessage = error.response?.data?.message || error.message || 'An error occurred during the upload.';
+      message.error(errorMessage);
       onError(error);
     } finally {
       setLoading(false);
-      // ❗ Optional: Reset the flag if you want to allow re-upload after a failure
-      // uploadTriggered.current = false;
+      // Resetting the flag to allow another upload attempt if needed
+      uploadTriggered.current = false;
     }
   };
 
