@@ -11,5 +11,7 @@ services:
         value: production
       - key: ASSEMBLYAI_API_KEY
         sync: false
-      - key: OPENROUTER_API_KEY
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: APILAYER_API_KEY
         sync: false
