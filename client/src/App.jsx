@@ -10,6 +10,7 @@ import './App.css';
 const { Header, Content } = Layout;
 
 const App = () => {
+  console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
   const dispatch = useDispatch();
   const [activeView, setActiveView] = useState('welcome');
   const [isModalVisible, setIsModalVisible] = useState(false);
