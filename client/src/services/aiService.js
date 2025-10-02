@@ -27,3 +27,14 @@ export const getInterviewFeedback = async (transcript) => {
   const response = await apiClient.post('/evaluate-interview', { transcript });
   return response.data;
 };
+
+export const analyzeAudio = async (audioFile) => {
+  const formData = new FormData();
+  formData.append('audio', audioFile);
+  const response = await apiClient.post('/analyze-audio', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data;
+};

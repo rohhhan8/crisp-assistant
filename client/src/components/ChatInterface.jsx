@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Input, Button, Skeleton, notification } from 'antd';
 import { AudioOutlined, AudioMutedOutlined } from '@ant-design/icons';
-import axios from 'axios'; // Import axios
+import { analyzeAudio } from '../services/aiService';
 import {
   addMessage,
   updateMissingDetail,
@@ -131,11 +131,9 @@ const ChatInterface = () => {
         let analysis = null;
         if (audioBlob.size > 1000) { // Only analyze if there is meaningful audio
           setIsAnalyzing(true);
-          const formData = new FormData();
-          formData.append('audio', audioBlob);
           try {
-            const { data } = await axios.post('http://localhost:5000/api/analyze-audio', formData);
-            analysis = data;
+            // Use the centralized service
+            analysis = await analyzeAudio(audioBlob);
             notification.success({ message: "Vocal analysis complete!" });
           } catch (error) {
             console.error("Audio analysis failed", error);
